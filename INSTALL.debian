@@ -33,7 +33,7 @@ if [[ -z "$HOSTNAME" ]] ; then
 fi
 
 # Install packages
-echo "* Installing packages..."
+read -p "* Installing packages..."
 
 if [ -n "$(uname -a | grep Ubuntu)" ] ; then
   LIBSSL_DEV_PKG=libssl-dev
@@ -43,6 +43,12 @@ else
   LIBJPEG_TURBO_DEV_PKG=libjpeg62-turbo-dev
 fi
 apt-get update
+apt-get -y install git
+apt-get -y install curl
+apt-get -y install sudo
+apt-get -y install gnupg
+apt-get -y install nginx
+apt-get -y install bundler
 apt-get -y install apt-transport-https
 apt-get -y install zlib1g-dev libglib2.0-dev
 apt-get -y install $LIBSSL_DEV_PKG build-essential automake libxml2-dev libxslt-dev ncurses-dev sudo libreadline-dev flex bison ragel redis git curl libcurl4-openssl-dev sendmail-bin sendmail nginx ssh coreutils ffmpeg mkvtoolnix
@@ -88,8 +94,16 @@ if verlte 9.5 $PG_VERSION ; then
 	make install
 fi
 
+# Install rbenv dependencies
+read -p "* Installing rbenv dependences..."
+curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash -
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt-get update
+sudo apt-get install git-core zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev software-properties-common libffi-dev nodejs yarn
+
 # Install rbenv
-echo "* Installing rbenv..."
+read -p "* Installing rbenv..."
 cd /tmp
 sudo -u danbooru git clone git://github.com/sstephenson/rbenv.git ~danbooru/.rbenv
 sudo -u danbooru touch ~danbooru/.bash_profile
@@ -101,19 +115,20 @@ sudo -u danbooru bash -l -c "RUBY_CONFIGURE_OPTS=--disable-install-doc rbenv ins
 sudo -u danbooru bash -l -c "rbenv global $RUBY_VERSION"
 
 # Install gems
-echo "* Installing gems..."
-sudo -u danbooru bash -l -c 'gem install --no-ri --no-rdoc bundler'
+read -p "* Installing gems..."
+sudo -u danbooru bash -l -c 'gem install --no-document bundler'
 
-echo "* Install configuration scripts..."
+read -p "* Install configuration scripts..."
 
 # Update PostgreSQL
-curl -L -s $GITHUB_INSTALL_SCRIPTS/postgresql_hba_conf -o /etc/postgresql/$PG_VERSION/main/pg_hba.conf
+curl -L -s https://raw.githubusercontent.com/danbooru/danbooru/master/script/install/postgresql_hba_conf -o /etc/postgresql/11/main/pg_hba.conf
 /etc/init.d/postgresql restart
 sudo -u postgres createuser -s danbooru
 sudo -u danbooru createdb danbooru2
 
+read -p "* Setup nginx....."
 # Setup nginx
-curl -L -s $GITHUB_INSTALL_SCRIPTS/nginx.danbooru.conf -o /etc/nginx/sites-enabled/danbooru.conf
+curl -L -s https://raw.githubusercontent.com/danbooru/danbooru/master/script/install/nginx.danbooru.conf -o /etc/nginx/sites-enabled/danbooru.conf
 sed -i -e "s/__hostname__/$HOSTNAME/g" /etc/nginx/sites-enabled/danbooru.conf
 /etc/init.d/nginx restart
 
@@ -132,7 +147,7 @@ mkdir -p /var/www/danbooru2/shared/data
 mkdir -p /var/www/danbooru2/shared/data/preview
 mkdir -p /var/www/danbooru2/shared/data/sample
 chown -R danbooru:danbooru /var/www/danbooru2
-curl -L -s $GITHUB_INSTALL_SCRIPTS/danbooru_local_config.rb.templ -o /var/www/danbooru2/shared/config/danbooru_local_config.rb
+curl -L -s https://raw.githubusercontent.com/danbooru/danbooru/master/script/install/danbooru_local_config.rb.templ -o /var/www/danbooru2/shared/config/danbooru_local_config.rb
 
 echo "* Almost done! You are now ready to deploy Danbooru onto this server."
 echo "* Log into Github and fork https://github.com/danbooru/danbooru into"
