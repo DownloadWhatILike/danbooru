@@ -131,7 +131,7 @@ sudo -u danbooru createdb danbooru2
 
 read -p "* Setup nginx....."
 # Setup nginx
-curl -L -s https://raw.githubusercontent.com/danbooru/danbooru/master/script/install/nginx.danbooru.conf -o /etc/nginx/sites-enabled/danbooru.conf
+curl -L -s https://raw.githubusercontent.com/DownloadWhatILike/danbooru/master/script/install/nginx.danbooru.conf -o /etc/nginx/sites-enabled/danbooru.conf
 sed -i -e "s/__hostname__/$HOSTNAME/g" /etc/nginx/sites-enabled/danbooru.conf
 /etc/init.d/nginx restart
 
