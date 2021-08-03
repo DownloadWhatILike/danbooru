@@ -49,7 +49,7 @@ apt-get -y install curl
 apt-get -y install sudo
 apt-get -y install gnupg
 apt-get -y install nginx
-apt-get -y install bundler
+# apt-get -y install bundler
 apt-get -y install apt-transport-https
 apt-get -y install zlib1g-dev libglib2.0-dev
 apt-get -y install $LIBSSL_DEV_PKG build-essential automake libxml2-dev libxslt-dev ncurses-dev sudo libreadline-dev flex bison ragel redis git curl libcurl4-openssl-dev sendmail-bin sendmail nginx ssh coreutils ffmpeg mkvtoolnix
@@ -71,9 +71,9 @@ fi
 
 # compile and install libvips (the version in apt is too old)
 cd /tmp
-wget -q https://github.com/libvips/libvips/releases/download/v$VIPS_VERSION/vips-$VIPS_VERSION.tar.gz
-tar xzf vips-$VIPS_VERSION.tar.gz
-cd vips-$VIPS_VERSION
+wget -q https://github.com/libvips/libvips/releases/download/v8.7.0/vips-8.7.0.tar.gz
+tar xzf vips-8.7.0.tar.gz
+cd vips-8.7.0
 ./configure --prefix=/usr
 make install
 ldconfig
@@ -112,8 +112,10 @@ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~danbooru/.bash_profile
 echo 'eval "$(rbenv init -)"' >> ~danbooru/.bash_profile
 sudo -u danbooru mkdir -p ~danbooru/.rbenv/plugins
 sudo -u danbooru git clone git://github.com/sstephenson/ruby-build.git ~danbooru/.rbenv/plugins/ruby-build
-sudo -u danbooru bash -l -c "RUBY_CONFIGURE_OPTS=--disable-install-doc rbenv install --verbose $RUBY_VERSION"
-sudo -u danbooru bash -l -c "rbenv global $RUBY_VERSION"
+sudo -u danbooru bash -l -c "RUBY_CONFIGURE_OPTS=--disable-install-doc rbenv install --verbose 2.7.0"
+sudo -u danbooru bash -l -c "rbenv global 2.7.0"
+sudo -u danbooru bash -l -c "ruby -v"
+read -p "* Ruby installed. Press enter to continue..."
 
 # Install gems
 read -p "* Installing gems..."
