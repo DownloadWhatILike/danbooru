@@ -49,7 +49,7 @@ apt-get -y install curl
 apt-get -y install sudo
 apt-get -y install gnupg
 apt-get -y install nginx
-# apt-get -y install bundler
+apt-get -y install bundler
 apt-get -y install apt-transport-https
 apt-get -y install zlib1g-dev libglib2.0-dev
 apt-get -y install $LIBSSL_DEV_PKG build-essential automake libxml2-dev libxslt-dev ncurses-dev sudo libreadline-dev flex bison ragel redis git curl libcurl4-openssl-dev sendmail-bin sendmail nginx ssh coreutils ffmpeg mkvtoolnix
