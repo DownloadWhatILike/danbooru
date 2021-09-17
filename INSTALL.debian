@@ -124,7 +124,7 @@ sudo -u danbooru bash -l -c 'gem install --no-document bundler'
 read -p "* Install configuration scripts..."
 
 # Update PostgreSQL
-curl -L -s https://raw.githubusercontent.com/danbooru/danbooru/master/script/install/postgresql_hba_conf -o /etc/postgresql/11/main/pg_hba.conf
+curl -L -s https://raw.githubusercontent.com/danbooru/danbooru/master/script/install/postgresql_hba_conf -o /etc/postgresql/12/main/pg_hba.conf
 /etc/init.d/postgresql restart
 sudo -u postgres createuser -s danbooru
 sudo -u danbooru createdb danbooru2
